@@ -79,7 +79,6 @@ const onCancel = () => {
       v-model:main-active-index="activeIndex"
       :items="tagList"
   />
-
   </div>
 </template>
 
