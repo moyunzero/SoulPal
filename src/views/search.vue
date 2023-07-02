@@ -1,15 +1,12 @@
 <script setup>
 import { ref } from 'vue';
-import { showToast } from 'vant';
-
+// import { showToast } from 'vant';
 
 const value = ref('');
-const onSearch = (val) => showToast(val);
-const onCancel = () => showToast('取消');
-
+const searchText = ref(value);
 const activeIds = ref([]);
 const activeIndex = ref(0);
-const tagList = [
+const orignTagList = [
   {
     text: '性别',
     children: [
@@ -28,12 +25,32 @@ const tagList = [
   },
 ];
 
-//移除标签
+// 移除标签
 const doClose = (tag) =>{
   activeIds.value = activeIds.value.filter(item =>{
     return item !== tag;
   })
 }
+// 搜索、删除
+const tagList = ref(orignTagList);
+const onSearch = ( val ) => {
+  tagList.value = orignTagList.map(parentTag => {
+    const temChildren = [...parentTag.children];
+    const tempParentTag = {...parentTag};
+    tempParentTag.children = temChildren.filter(item => item.text.includes(searchText.value));
+    return tempParentTag;
+  }).filter(parentTag => parentTag.children.length > 0);// 添加筛选父标签的逻辑
+  if (tagList.value.length === 0) {
+    tagList.value.push({ text: "无该标签" }); // 在tagList中添加一个特定的对象表示找不到相应的标签
+  }
+};
+
+
+const onCancel = () => {
+  searchText.value = '';
+  tagList.value = orignTagList;
+};
+
 
 </script>
 
