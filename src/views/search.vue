@@ -1,7 +1,8 @@
 <script setup>
-import { ref } from 'vue';
-// import { showToast } from 'vant';
+import { onMounted, ref } from 'vue';
+import { showToast } from 'vant';
 import { useRouter } from 'vue-router';
+import myAxios from '../plugins/myAxios'
 
 const router = useRouter();
 
@@ -47,7 +48,6 @@ const onSearch = ( val ) => {
     tagList.value.push({ text: "无该标签" }); // 在tagList中添加一个特定的对象表示找不到相应的标签
   }
 };
-
 const onCancel = () => {
   searchText.value = '';
   tagList.value = orignTagList;
@@ -62,6 +62,22 @@ const doSearchResult = () => {
     }
   })
 }
+
+// onMounted(()=>{
+//   myAxios.get('/user/search/tags',{
+//     params:{
+//       tagNameList:tags
+//     }
+//   })
+//   .then(function (response){
+//     console.log('/user/search/tags succeed', response);
+//     showToast.succeed('请求成功');
+//   })
+//   .catch(function(error) {
+//     console.log('/user/search/tags error', error);
+//     showToast.fail('请求失败');
+//   })
+// })
 
 </script>
 

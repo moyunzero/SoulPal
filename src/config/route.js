@@ -5,6 +5,9 @@ import Chat from '../views/chat.vue'
 import Search from '../views/search.vue'
 import UserEdit from '../views/userEdit.vue';
 import UserResultPage from '../views/userResultPage.vue'
+import UserLoginPage from "../views/userLoginPage.vue";
+
+
 
 // 定义路由
 const routes = [
@@ -15,6 +18,7 @@ const routes = [
   {path: '/search', component:Search},
   {path: '/user/edit', name:'userEdit' ,component:UserEdit},
   {path: '/user/list', component:UserResultPage},
+  {path: '/user/login', component:UserLoginPage },
 ]
 
 export default routes
