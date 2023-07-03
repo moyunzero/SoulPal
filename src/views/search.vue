@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 // import { showToast } from 'vant';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const value = ref('');
 const searchText = ref(value);
@@ -45,12 +48,20 @@ const onSearch = ( val ) => {
   }
 };
 
-
 const onCancel = () => {
   searchText.value = '';
   tagList.value = orignTagList;
 };
 
+// 搜索结果页面跳转
+const doSearchResult = () => {
+  router.push({
+    path:'/user/list',
+    query:{
+      tags:activeIds.value
+    }
+  })
+}
 
 </script>
 
@@ -74,11 +85,15 @@ const onCancel = () => {
        </van-tag>
       </div>
     </van-row>
+    
   <van-tree-select
       v-model:active-id="activeIds"
       v-model:main-active-index="activeIndex"
       :items="tagList"
   />
+  <div style="padding:16px">
+    <van-button block type="primary" @click="doSearchResult">搜索</van-button>
+  </div>
   </div>
 </template>
 

@@ -7,6 +7,7 @@
   userAccount: String,
   avatarUrl : String,
   gender: Number,
+  profile:String,
   phone: String,
   email: String,
   userStatus: Number,
