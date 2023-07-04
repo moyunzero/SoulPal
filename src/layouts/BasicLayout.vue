@@ -1,44 +1,61 @@
-<script setup>
-import { ref } from 'vue';
-// import { showToast } from 'vant';
-import { useRouter } from 'vue-router';
+<template>
+  <van-nav-bar
+          fixed
+          placeholder
+          :title="title"
+          :left-arrow="route.path!=='/'&&route.path!=='/circle'
+          &&route.path!=='/user'&&route.path!=='/user/login'"
+          @click-left="onClickLeft"
+          @click-right="onClickRight"
+  >
+      <template #right>
+          <van-icon name="search" v-if="route.path==='/'" size="18"/>
+          <van-icon name="plus" size="18"
+                    v-if="route.path==='/circle'||route.path==='/circle/myCreate'||route.path==='/circle/myJoin'"/>
+      </template>
+  </van-nav-bar>
+
+  <div id="content">
+      <router-view/>
+  </div>
+  <van-tabbar route v-if="route.path==='/'||route.path==='/circle'||route.path==='/user'">
+      <van-tabbar-item replace to="/" icon="home-o">主页</van-tabbar-item>
+      <van-tabbar-item replace to="/circle" icon="friends-o">SOUl</van-tabbar-item>
+      <van-tabbar-item replace to="/user" icon="user-o">个人</van-tabbar-item>
+  </van-tabbar>
+</template>
+
+<script setup >
+
+import {useRoute, useRouter} from "vue-router";
+import {ref} from "vue";
 
 const router = useRouter();
+const route = useRoute();
+const title = ref('主页')
+
+router.beforeEach((to, from, next) => {
+  title.value = to.meta.title
+  next()
+})
+
 const onClickLeft = () => {
-  router.push('./');
+  router.back();
 }
 const onClickRight = () => {
-  router.push('/search');
+  if (route.path === '/') {
+      router.push('/search')
+  }
+  if (route.path === '/circle' || route.path === '/circle/myCreate' || route.path === '/circle/myJoin') {
+      router.push('/circle/create')
+  }
 }
+
 
 </script>
 
-<template>
-  <main>
-
-    <!-- 导航栏 -->
-    
-    <van-nav-bar title="Soul Pal" left-text="返回" left-arrow  @click-left="onClickLeft">
-      <template #right>
-        <van-icon name="search" size="18" @click="onClickRight" />
-      </template>
-    </van-nav-bar>
-
-    <div class="content">
-      <router-view />
-    </div>
-    <!-- table切换栏 -->
-    <van-tabbar route>
-      <van-tabbar-item to="/"  icon="home-o">主页</van-tabbar-item>
-      <van-tabbar-item to="/square"  icon="search">广场</van-tabbar-item>
-      <van-tabbar-item to="/chat"  icon="friends-o">聊天</van-tabbar-item>
-      <van-tabbar-item to="/user"  icon="setting-o">自己</van-tabbar-item>
-    </van-tabbar>
-
-  </main>
-
-</template>
-
 <style scoped>
-
-</style>>
+#content {
+  padding-bottom: 60px;
+}
+</style>

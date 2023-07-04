@@ -10,9 +10,6 @@ export default defineConfig({
       resolvers: [VantResolver()],
     }),
   ],
-  server:{
-    port:3000,
-  }
   
 })
 

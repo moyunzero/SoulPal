@@ -11,7 +11,7 @@ const router = vueRouter.createRouter({
 })
 
 const app = createApp(App)
-
+export default router;
 app.use(router)
 app.use(VanImage);
 app.mount('#app')

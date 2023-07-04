@@ -12,6 +12,6 @@
   email: String,
   userStatus: Number,
   userRole: Number,
-  tags: Array,
+  tags: String,
   createTime: Date,
 };

@@ -1,0 +1,15 @@
+export const CircleType =  {
+    createTime: Date,
+    description: String,
+    expireTime: Date,
+    id: Number,
+    imageUrl: String,
+    isDelete: Number,
+    maxNum: Number,
+    name: String,
+    status: Number,
+    updateTime: Date,
+    userId: Number,
+    hasJoin: Boolean,
+    memberList: Array,
+}

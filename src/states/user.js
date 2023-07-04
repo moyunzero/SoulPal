@@ -1,14 +1,14 @@
 let currentUser = null;
 
-const setCurrentUserState = (user) =>{
+const setUserState = (user) =>{
  currentUser = user;
 } 
 
-const getCurrentUserState = () =>{
+const getUserState= () =>{
  return currentUser;
 }
 
 export {
- setCurrentUserState,
- getCurrentUserState,
+  setUserState,
+  getUserState,
 }
