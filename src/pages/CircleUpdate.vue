@@ -70,7 +70,7 @@
                     placeholder="点击选择时间"
                     @click="showPicker = true"
             />
-            <van-popup v-model:show="showPicker" position="bottom">
+            <van-popup :show="showPicker" position="bottom">
                 <van-picker-group
                         title="过期日期"
                         :tabs="['选择日期', '选择时间']"
@@ -103,8 +103,6 @@
 <script setup >
 import {onMounted, ref} from "vue";
 import request from "../config/request.js";
-import 'vant/es/toast/style';
-import 'vant/es/notify/style'
 import {showFailToast, showNotify, showSuccessToast} from "vant";
 import {useRoute, useRouter} from "vue-router";
 

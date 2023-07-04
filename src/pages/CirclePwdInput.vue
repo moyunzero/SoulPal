@@ -1,4 +1,5 @@
 <template>
+    <div>
   <!-- 密码输入框 -->
     <van-password-input
             style="margin-top: 90px"
@@ -14,6 +15,7 @@
             :show="showKeyboard"
             @blur="showKeyboard = false"
     />
+    </div>
 </template>
 
 <script setup >

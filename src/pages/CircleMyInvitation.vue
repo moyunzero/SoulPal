@@ -1,5 +1,6 @@
 <template>
-    <template v-for="circle in circleList" :key="circle.id">
+    <div>
+    <div v-for="circle in circleList" :key="circle.id">
         <van-card
                 :title="circle.name"
                 :desc="circle.description"
@@ -20,8 +21,9 @@
                 过期时间：{{ circle.expireTime }} <br>
             </template>
         </van-card>
-    </template>
+    </div>
     <van-empty image="search" v-if="circleList === null || circleList.length < 1" description="结果为空"/>
+    </div>
 </template>
 
 <script setup >

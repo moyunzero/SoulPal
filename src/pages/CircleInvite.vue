@@ -1,4 +1,5 @@
 <template>
+    <div>
     <van-radio-group style="margin-top: 10px;" v-model="checked" v-for="circle in myCircleList" :key="circle.id">
         <van-cell-group v-if="circle.memberList.length !== circle.maxNum" inset>
             <van-cell :title="circle.name" clickable @click="checked=circle.id">
@@ -12,6 +13,7 @@
         <van-button round block type="primary" :disabled="checked === 0" @click="doInvite">
             邀请
         </van-button>
+    </div>  
     </div>
 </template>
 

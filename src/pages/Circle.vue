@@ -1,4 +1,5 @@
 <template>
+    <div>
     <van-search v-model="searchText" placeholder="搜索圈子" @search="searchCircle"/>
     <template v-for="circle in circleList">
         <van-card
@@ -26,6 +27,7 @@
         </van-card>
     </template>
     <van-empty image="search" v-if="circleList.length < 1" description="结果为空"/>
+    </div>
 </template>
 
 <script setup>

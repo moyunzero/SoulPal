@@ -1,4 +1,5 @@
 <template>
+    <div>
   <!--搜索-->
     <form action="/">
         <van-search
@@ -22,14 +23,15 @@
 
   <!--分类选择-->
     <van-tree-select
-            v-model:active-id="activeIds"
-            v-model:main-active-index="activeIndex"
+            :active-id="activeIds"
+            :main-active-index="activeIndex"
             :items="tagList"
             style="height: 400px"
     />
     <van-button type="primary" round text="搜索" style="position: fixed;bottom: 30px" size="large"
                 :disabled="activeIds.length < 1"
                 @click="toSearchResult(activeIds)"/>
+    </div>
 </template>
 
 <script setup >

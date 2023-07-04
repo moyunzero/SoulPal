@@ -1,11 +1,11 @@
 <template>
-    <van-search v-model="searchText" placeholder="搜索圈子" @search="searchCircle"/>
-    <template v-for="circle in circleList" :key = "circle.id">
+    <div>
+    <van-search v-model="searchText" placeholder="搜索圈子" @search="searchCircle" />
+    <div v-for="circle in circleList" :key="circle.id" >
         <van-card
                 :title="circle.name"
                 :desc="circle.description"
                 :thumb="circle.imageUrl"
-                
         >
             <template #tags>
                 <div style="margin-top: 5px;">
@@ -23,8 +23,9 @@
                 过期时间：{{ circle.expireTime }} <br>
             </template>
         </van-card>
-    </template>
+    </div>
     <van-empty image="search" v-if="circleList === null || circleList.length < 1" description="结果为空"/>
+    </div>
 </template>
 
 <script setup >

@@ -1,4 +1,5 @@
 <template>
+    <div>
     <template v-if="user">
         <van-cell title="昵称" is-link :value="user.username" @click="showEditUsername=true"/>
         <van-cell title="账号" :value="user.userAccount"/>
@@ -27,7 +28,7 @@
         <van-empty image="error" description="加载失败"/>
     </template>
     <van-dialog title="修改性别" show-cancel-button
-                v-model:show="showEditGender"
+                :show="showEditGender"
                 @cancel="user.gender=originUser.gender"
                 @confirm="confirmEdit('gender')">
         <div style="display: flex;justify-content: space-around;margin: 20px">
@@ -38,19 +39,19 @@
         </div>
     </van-dialog>
     <van-dialog title="修改昵称" show-cancel-button
-                v-model:show="showEditUsername"
+                :show="showEditUsername"
                 @cancel="user.username=originUser.username"
                 @confirm="confirmEdit('username')">
         <van-field type="text" v-model="user.username" input-align="center"/>
     </van-dialog>
     <van-dialog title="修改邮箱" show-cancel-button
-                v-model:show="showEditEmail"
+                :show="showEditEmail"
                 @cancel="user.email=originUser.email"
                 @confirm="confirmEdit('email')">
         <van-field type="email" v-model="user.email" input-align="center"/>
     </van-dialog>
     <van-dialog title="修改简介" show-cancel-button
-                v-model:show="showEditProfile"
+                :show="showEditProfile"
                 @cancel="user.profile=originUser.profile;"
                 @confirm="confirmEdit('profile')">
         <van-field
@@ -64,11 +65,12 @@
         />
     </van-dialog>
     <van-dialog title="修改手机号" show-cancel-button
-                v-model:show="showEditPhone"
+                :show="showEditPhone"
                 @cancel="user.phone=originUser.phone"
                 @confirm="confirmEdit('phone')">
         <van-field type="tel" v-model="user.phone" input-align="center"/>
     </van-dialog>
+    </div>
 </template>
 
 <script setup >

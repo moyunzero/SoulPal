@@ -1,5 +1,5 @@
 <template>
-    <van-tabs v-model:active="activeTab">
+    <van-tabs :active="activeTab">
         <van-tab title="登录">
             <van-form @submit="onSubmit">
                 <van-space direction="vertical" fill :size="20" style="margin-top: 20px;">

@@ -1,5 +1,6 @@
 <template>
-    <template v-for="user in userList" :key="user">
+    <div>
+    <div v-for="user in userList" :key="user">
         <van-card
                 :title="user.username"
                 :desc="user.profile"
@@ -18,8 +19,9 @@
                 </van-button>
             </template>
         </van-card>
-    </template>
+    </div>
     <van-empty image="search" v-if="userList.length < 1" description="搜索结果为空"/>
+    </div>
 </template>
 
 <script setup>

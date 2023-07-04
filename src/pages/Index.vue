@@ -1,11 +1,12 @@
 <template>
+    <div>
     <van-cell center icon="friends" title="找搭子">
         <template #right-icon>
             <van-switch v-model="matchMode" @click="changeMode"/>
         </template>
     </van-cell>
     <van-dialog show-cancel-button title="选择个数"
-                v-model:show="showMatchDialog"
+                :show="showMatchDialog"
                 @cancel="matchMode=!matchMode"
                 @confirm="loadUserList">
         <div style="display: flex;justify-content: space-evenly;margin-top: 15px">
@@ -15,7 +16,7 @@
         </div>
     </van-dialog>
 
-    <template v-for="user in userList" :key="user">
+    <div v-for="user in userList" :key="user">
         <van-card
                 :title="user.username"
                 :desc="user.profile"
@@ -32,8 +33,9 @@
                 </van-button>
             </template>
         </van-card>
-    </template>
+    </div>
     <van-empty image="search" v-if="userList === null ||userList.length < 1" description="结果为空"/>
+    </div>
 </template>
 
 <script setup >
