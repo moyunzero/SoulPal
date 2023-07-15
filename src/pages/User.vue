@@ -1,18 +1,7 @@
-<template>
-    <div>
-    <van-cell icon="user-o" title="个人信息" is-link to="/user/info"/>
-    <van-cell icon="bars" title="标签管理" is-link to="/tag"/>
-    <van-cell icon="friends-o" title="我加入的圈子" is-link to="/circle/myJoin"/>
-    <van-cell icon="friends-o" title="我创建的圈子" is-link to="/circle/myCreate"/>
-    <van-cell icon="smile-comment-o" title="我收到的邀请" is-link to="/circle/myInvitation"/>
-    <van-button block style="margin-top: 30px" @click="toLogin">退出</van-button>
-    </div>
-</template>
-
-<script setup >
-import {useRouter} from "vue-router";
-import {showConfirmDialog, showNotify} from "vant";
-import request from "../config/request.js";
+<script setup lang="ts">
+import request from "../config/request";
+import { useRouter } from "vue-router";
+import { showConfirmDialog, showNotify } from "vant";
 
 const router = useRouter();
 const toLogin = () => {
@@ -28,11 +17,19 @@ const toLogin = () => {
             }else {
                 showNotify({message: res.description, type: 'danger', duration: 500, });
             }
-    }).catch((err) => {});
+    }).catch((err) => {console.log(err)});
 
 }
 </script>
+<template>
+    <van-cell icon="user-o" title="个人信息" is-link to="/user/info"/>
+    <van-cell icon="bars" title="个人标签" is-link to="/tag"/>
+    <van-cell icon="friends-o" title="加入の搭圈" is-link to="/circle/myJoin"/>
+    <van-cell icon="friends-o" title="创建の搭圈" is-link to="/circle/myCreate"/>
+    <van-cell icon="smile-comment-o" title="收到の邀请" is-link to="/circle/myInvitation"/>
+    <van-button block style="margin-top: 30px" @click="toLogin">退出</van-button>
 
+</template>
 <style scoped>
 
 </style>

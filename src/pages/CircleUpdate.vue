@@ -1,12 +1,71 @@
+<script setup lang="ts">
+import request from "../config/request";
+import { ref } from "vue";
+import { showFailToast, showNotify, showSuccessToast } from "vant";
+import { useRoute } from "vue-router";
+import 'vant/es/toast/style';
+import 'vant/es/notify/style'
+
+// const router = useRouter();
+const showPicker = ref(false);
+const minDate = new Date();
+const pickedDate = ref([])
+const pickedTime = ref([])
+const route = useRoute();
+
+const initFormData = JSON.parse(<string>route.query.circle);
+const updateCircleData = ref({...initFormData});
+
+/**
+ * 选择时间
+ */
+const onConfirmDatePick = () => {
+    pickedTime.value.push('00');
+    const time = `${pickedDate.value.join('-')} ${pickedTime.value.join(':')}`
+    updateCircleData.value.expireTime = time;
+    showPicker.value = false;
+}
+/**
+ * 更新
+ */
+const onSubmit = async () => {
+    const res = await request.put("/circle", updateCircleData.value);
+    if (res.code === 0) {
+        showSuccessToast("更新成功");
+    } else {
+        showFailToast("更新失败");
+        showNotify({type: 'danger', message: res.description});
+    }
+}
+
+/**
+ * 上传文件
+ */
+const afterRead = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file.file);
+    const res = await request.post('/file/upload', formData,
+        {
+            headers: {'Content-Type': 'multipart/form-data'},
+        });
+    if (res.code === 0) {
+        updateCircleData.value.imageUrl = res.data;
+        showSuccessToast("上传成功");
+    } else {
+        showFailToast("上传失败");
+    }
+}
+</script>
+
 <template>
     <van-form @submit="onSubmit">
         <van-cell-group inset>
             <van-field
                     v-model="updateCircleData.name"
                     name="name"
-                    label="圈子名称"
-                    placeholder="圈子名称"
-                    :rules="[{ required: true, message: '请填写圈子名称' }]"
+                    label="搭圈名称"
+                    placeholder="搭圈名称"
+                    :rules="[{ required: true, message: '请填写搭圈名称' }]"
             />
             <van-field
                     v-model="updateCircleData.description"
@@ -70,7 +129,7 @@
                     placeholder="点击选择时间"
                     @click="showPicker = true"
             />
-            <van-popup :show="showPicker" position="bottom">
+            <van-popup v-model:show="showPicker" position="bottom">
                 <van-picker-group
                         title="过期日期"
                         :tabs="['选择日期', '选择时间']"
@@ -99,63 +158,6 @@
     </van-form>
 
 </template>
-
-<script setup >
-import {onMounted, ref} from "vue";
-import request from "../config/request.js";
-import {showFailToast, showNotify, showSuccessToast} from "vant";
-import {useRoute, useRouter} from "vue-router";
-
-const router = useRouter();
-const showPicker = ref(false);
-const minDate = new Date();
-const pickedDate = ref([])
-const pickedTime = ref([])
-const route = useRoute();
-
-const initFormData = JSON.parse(route.query.circle);
-const updateCircleData = ref({...initFormData});
-
-/**
- * 选择时间
- */
-const onConfirmDatePick = () => {
-    pickedTime.value.push('00');
-    const time = `${pickedDate.value.join('-')} ${pickedTime.value.join(':')}`
-    updateCircleData.value.expireTime = time;
-    showPicker.value = false;
-}
-/**
- * 更新
- */
-const onSubmit = async () => {
-    const res = await request.put("/circle", updateCircleData.value);
-    if (res.code === 0) {
-        showSuccessToast("更新成功");
-    } else {
-        showFailToast("更新失败");
-        showNotify({type: 'danger', message: res.description});
-    }
-}
-
-/**
- * 上传文件
- */
-const afterRead = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file.file);
-    const res = await request.post('/file/upload', formData,
-        {
-            headers: {'Content-Type': 'multipart/form-data'},
-        });
-    if (res.code === 0) {
-        updateCircleData.value.imageUrl = res.data;
-        showSuccessToast("上传成功");
-    } else {
-        showFailToast("上传失败");
-    }
-}
-</script>
 
 <style scoped>
 </style>

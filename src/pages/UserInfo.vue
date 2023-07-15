@@ -1,96 +1,22 @@
-<template>
-    <div>
-    <template v-if="user">
-        <van-cell title="昵称" is-link :value="user.username" @click="showEditUsername=true"/>
-        <van-cell title="账号" :value="user.userAccount"/>
-        <van-cell title="头像" is-link>
-            <van-uploader
-                    :after-read="afterRead"
-                    accept="image/*"
-            >
-                <van-image
-                        width="5rem"
-                        height="5rem"
-                        fit="cover"
-                        position="left"
-                        :src="user.avatarUrl"
-                />
-            </van-uploader>
-        </van-cell>
-        <van-cell title="性别" is-link :value="user.gender===null?'':UserGenderEnum[user.gender]"
-                  @click="showEditGender=true"/>
-        <van-cell title="邮箱" is-link :value="user.email" @click="showEditEmail=true"/>
-        <van-cell title="简介" is-link :value="user.profile" @click="showEditProfile=true"/>
-        <van-cell title="手机号" is-link :value="user.phone" @click="showEditPhone=true"/>
-        <van-cell title="注册时间" :value="String(user.createTime)"/>
-    </template>
-    <template v-if="!user">
-        <van-empty image="error" description="加载失败"/>
-    </template>
-    <van-dialog title="修改性别" show-cancel-button
-                :show="showEditGender"
-                @cancel="user.gender=originUser.gender"
-                @confirm="confirmEdit('gender')">
-        <div style="display: flex;justify-content: space-around;margin: 20px">
-            <van-radio-group direction="horizontal" v-model="user.gender">
-                <van-radio :name="1">男</van-radio>
-                <van-radio :name="0" style="margin-left: 20px">女</van-radio>
-            </van-radio-group>
-        </div>
-    </van-dialog>
-    <van-dialog title="修改昵称" show-cancel-button
-                :show="showEditUsername"
-                @cancel="user.username=originUser.username"
-                @confirm="confirmEdit('username')">
-        <van-field type="text" v-model="user.username" input-align="center"/>
-    </van-dialog>
-    <van-dialog title="修改邮箱" show-cancel-button
-                :show="showEditEmail"
-                @cancel="user.email=originUser.email"
-                @confirm="confirmEdit('email')">
-        <van-field type="email" v-model="user.email" input-align="center"/>
-    </van-dialog>
-    <van-dialog title="修改简介" show-cancel-button
-                :show="showEditProfile"
-                @cancel="user.profile=originUser.profile;"
-                @confirm="confirmEdit('profile')">
-        <van-field
-                v-model="user.profile"
-                rows="3"
-                autosize
-                type="textarea"
-                maxlength="50"
-                placeholder="请输入简介"
-                show-word-limit
-        />
-    </van-dialog>
-    <van-dialog title="修改手机号" show-cancel-button
-                :show="showEditPhone"
-                @cancel="user.phone=originUser.phone"
-                @confirm="confirmEdit('phone')">
-        <van-field type="tel" v-model="user.phone" input-align="center"/>
-    </van-dialog>
-    </div>
-</template>
-
-<script setup >
-import {useRouter} from "vue-router";
-import {onMounted,  ref} from "vue";
-import {getCurrentUser} from "../services/user";
-import request from "../config/request.js";
-import {showFailToast, showNotify, showSuccessToast} from "vant";
+<script setup lang="ts">
+import request from "../config/request";
+// import {useRouter} from "vue-router";
+import { onMounted, Ref, ref } from "vue";
+import { getCurrentUser } from "../services/user";
+import { showFailToast, showNotify, showSuccessToast } from "vant";
+import { UserGenderEnum } from "../constants/UserGenderEnum";
+import { UserType } from "../models/user";
 import 'vant/es/toast/style';
 import 'vant/es/notify/style'
-import {UserGenderEnum} from "../constants/UserGenderEnum.js";
 
-const user= ref({})
-const router = useRouter();
+const user: Ref<UserType> = ref({})
+// const router = useRouter();
 const showEditGender = ref(false);
 const showEditUsername = ref(false);
 const showEditEmail = ref(false);
 const showEditProfile = ref(false);
 const showEditPhone = ref(false);
-let originUser = {};
+let originUser = {} as UserType;
 
 onMounted(async () => {
     user.value = await getCurrentUser();
@@ -186,6 +112,80 @@ const edit = async (name) => {
 }
 
 </script>
+
+<template>
+    <template v-if="user">
+        <van-cell title="昵称" is-link :value="user.username" @click="showEditUsername=true"/>
+        <van-cell title="账号" :value="user.userAccount"/>
+        <van-cell title="头像" is-link>
+            <van-uploader
+                    :after-read="afterRead"
+                    accept="image/*"
+            >
+                <van-image
+                        width="5rem"
+                        height="5rem"
+                        fit="cover"
+                        position="left"
+                        :src="user.avatarUrl"
+                />
+            </van-uploader>
+        </van-cell>       
+        <van-cell title="简介" is-link :value="user.profile" @click="showEditProfile=true"/>
+        <van-cell title="性别" is-link :value="user.gender===null?'':UserGenderEnum[user.gender]"
+                  @click="showEditGender=true"/>
+        <van-cell title="邮箱" is-link :value="user.email" @click="showEditEmail=true"/>
+        <van-cell title="手机号" is-link :value="user.phone" @click="showEditPhone=true"/>
+        <van-cell title="注册时间" :value="String(user.createTime)"/>
+    </template>
+    <template v-if="!user">
+        <van-empty image="error" description="加载失败"/>
+    </template>
+
+    <van-dialog title="修改昵称" show-cancel-button
+                v-model:show="showEditUsername"
+                @cancel="user.username=originUser.username"
+                @confirm="confirmEdit('username')">
+        <van-field type="text" v-model="user.username" input-align="center"/>
+    </van-dialog>
+    <van-dialog title="修改简介" show-cancel-button
+                v-model:show="showEditProfile"
+                @cancel="user.profile=originUser.profile;"
+                @confirm="confirmEdit('profile')">
+        <van-field
+                v-model="user.profile"
+                rows="3"
+                autosize
+                type="textarea"
+                maxlength="50"
+                placeholder="请输入简介"
+                show-word-limit
+        />
+    </van-dialog>    
+    <van-dialog title="修改性别" show-cancel-button
+                v-model:show="showEditGender"
+                @cancel="user.gender=originUser.gender"
+                @confirm="confirmEdit('gender')">
+        <div style="display: flex;justify-content: space-around;margin: 20px">
+            <van-radio-group direction="horizontal" v-model="user.gender">
+                <van-radio :name="1">男</van-radio>
+                <van-radio :name="0" style="margin-left: 20px">女</van-radio>
+            </van-radio-group>
+        </div>
+    </van-dialog>    
+    <van-dialog title="修改邮箱" show-cancel-button
+                v-model:show="showEditEmail"
+                @cancel="user.email=originUser.email"
+                @confirm="confirmEdit('email')">
+        <van-field type="email" v-model="user.email" input-align="center"/>
+    </van-dialog>
+    <van-dialog title="修改手机号" show-cancel-button
+                v-model:show="showEditPhone"
+                @cancel="user.phone=originUser.phone"
+                @confirm="confirmEdit('phone')">
+        <van-field type="tel" v-model="user.phone" input-align="center"/>
+    </van-dialog>
+</template>
 
 <style scoped>
 

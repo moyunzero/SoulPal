@@ -1,27 +1,8 @@
-<template>
-    <div>
-    <van-radio-group style="margin-top: 10px;" v-model="checked" v-for="circle in myCircleList" :key="circle.id">
-        <van-cell-group v-if="circle.memberList.length !== circle.maxNum" inset>
-            <van-cell :title="circle.name" clickable @click="checked=circle.id">
-                <template #right-icon>
-                    <van-radio :name="circle.id"/>
-                </template>
-            </van-cell>
-        </van-cell-group>
-    </van-radio-group>
-    <div style="margin-top: 20px;">
-        <van-button round block type="primary" :disabled="checked === 0" @click="doInvite">
-            邀请
-        </van-button>
-    </div>  
-    </div>
-</template>
-
-<script setup >
-import {useRoute, useRouter} from "vue-router";
-import request from "../config/request.js";
-import {onMounted, ref} from "vue";
-import {showFailToast, showNotify, showSuccessToast} from "vant";
+<script setup lang="ts">
+import request from "../config/request";
+import { onMounted, ref } from "vue";
+import { showFailToast, showNotify, showSuccessToast } from "vant";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
@@ -33,14 +14,14 @@ onMounted(() => {
     loadCircle();
 })
 /**
- * 加载圈子信息
+ * 加载搭圈信息
  */
 const loadCircle = async () => {
     const res = await request.get('/circle/my/create');
     if (res.code === 0) {
         myCircleList.value = res.data;
     } else {
-        showFailToast('加载圈子失败');
+        showFailToast('加载搭圈失败');
         showNotify({message: res.description, type: 'danger'});
     }
 }
@@ -62,6 +43,22 @@ const doInvite = async () => {
 }
 
 </script>
+<template>
+    <van-radio-group style="margin-top: 10px;" v-model="checked" v-for="circle in myCircleList">
+        <van-cell-group v-if="circle.memberList.length !== circle.maxNum" inset>
+            <van-cell :title="circle.name" clickable @click="checked=circle.id">
+                <template #right-icon>
+                    <van-radio :name="circle.id"/>
+                </template>
+            </van-cell>
+        </van-cell-group>
+    </van-radio-group>
+    <div style="margin-top: 20px;">
+        <van-button round block type="primary" :disabled="checked === 0" @click="doInvite">
+            邀请
+        </van-button>
+    </div>
+</template>
 
 <style scoped>
 

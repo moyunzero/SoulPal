@@ -1,5 +1,5 @@
-import request from "../config/request.js";
-import { setUserState } from "../states/user.js";
+import request from "../config/request";
+import {setUserState} from "../states/user";
 export const getCurrentUser = async () => {
     const res = await request.get("/user/current");
     if (res.data){
@@ -8,3 +8,4 @@ export const getCurrentUser = async () => {
     }
     return null;
 }
+

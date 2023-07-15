@@ -1,5 +1,55 @@
+<script setup lang="ts">
+import request from "../config/request";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { showFailToast, showNotify } from "vant";
+import { setUserState } from "../states/user";
+import user from "../assets/cwy.jpg"
+
+const router = useRouter();
+const userAccount = ref('');
+const userPassword = ref('');
+const userAccount2 = ref('');
+const userPassword2 = ref('');
+const checkPassword = ref('');
+const activeTab = ref(0)
+/**
+ * 登录
+ */
+const onSubmit = async () => {
+    const res = await request.post("/user/login", {
+        userAccount: userAccount.value,
+        userPassword: userPassword.value
+    })
+    if (res.code === 0) {
+        setUserState(res.data);
+        router.push('/');
+    } else {
+        showFailToast("登陆失败");
+        showNotify({message: res.description, type: 'danger'});
+    }
+}
+/**
+ * 注册
+ */
+const onSubmit2 = async () => {
+    const res = await request.post("/user/register", {
+        userAccount: userAccount2.value,
+        userPassword: userPassword2.value,
+        checkPassword: checkPassword.value,
+    })
+    if (res.code === 0) {
+        setUserState(res.data);
+        router.push('/');
+    } else {
+        showFailToast("注册失败");
+        showNotify({message: res.description, type: 'danger'});
+    }
+}
+</script>
+
 <template>
-    <van-tabs :active="activeTab">
+    <van-tabs v-model:active="activeTab">
         <van-tab title="登录">
             <van-form @submit="onSubmit">
                 <van-space direction="vertical" fill :size="20" style="margin-top: 20px;">
@@ -85,56 +135,6 @@
     </van-tabs>
 
 </template>
-
-<script setup >
-import {ref} from "vue";
-import request from "../config/request.js";
-import {useRouter} from "vue-router";
-import {showFailToast, showNotify} from "vant";
-import {setUserState} from "../states/user.js";
-import user from "../assets/vue.svg"
-
-const router = useRouter();
-const userAccount = ref('');
-const userPassword = ref('');
-const userAccount2 = ref('');
-const userPassword2 = ref('');
-const checkPassword = ref('');
-const activeTab = ref(0)
-/**
- * 登录
- */
-const onSubmit = async () => {
-    const res = await request.post("/user/login", {
-        userAccount: userAccount.value,
-        userPassword: userPassword.value
-    })
-    if (res.code === 0) {
-        setUserState(res.data);
-        router.push('/');
-    } else {
-        showFailToast("登陆失败");
-        showNotify({message: res.description, type: 'danger'});
-    }
-}
-/**
- * 注册
- */
-const onSubmit2 = async () => {
-    const res = await request.post("/user/register", {
-        userAccount: userAccount2.value,
-        userPassword: userPassword2.value,
-        checkPassword: checkPassword.value,
-    })
-    if (res.code === 0) {
-        setUserState(res.data);
-        router.push('/');
-    } else {
-        showFailToast("注册失败");
-        showNotify({message: res.description, type: 'danger'});
-    }
-}
-</script>
 
 <style scoped>
 

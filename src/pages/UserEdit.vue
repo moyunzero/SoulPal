@@ -1,28 +1,9 @@
-<template>
-    <van-form @submit="onSubmit">
-        <van-cell-group inset>
-            <van-field
-                v-if="editUser.editName!=='gender'"
-                    v-model="editUser.curVal"
-                    :name="`${editUser.editName}`"
-                    :label="`${editUser.lableName}`"
-                    :placeholder="`请输入${editUser.lableName}`"
-            />
-        </van-cell-group>
-        <div style="margin: 16px;">
-            <van-button round block type="primary" native-type="submit">
-                提交
-            </van-button>
-        </div>
-    </van-form>
-</template>
-
-<script setup>
-import {useRoute, useRouter} from "vue-router";
-import {ref} from "vue";
-import request from "../config/request.js";
-import {showFailToast, showSuccessToast} from "vant";
-import {getCurrentUser} from "../services/user.js";
+<script setup lang="ts">
+import request from "../config/request";
+import { useRoute, useRouter } from "vue-router";
+import { ref } from "vue";
+import { showFailToast, showSuccessToast } from "vant";
+import { getCurrentUser } from "../services/user";
 
 const route = useRoute();
 const router = useRouter();
@@ -45,6 +26,25 @@ const onSubmit = async () => {
     }
 }
 </script>
+
+<template>
+    <van-form @submit="onSubmit">
+        <van-cell-group inset>
+            <van-field
+                v-if="editUser.editName!=='gender'"
+                    v-model="editUser.curVal"
+                    :name="`${editUser.editName}`"
+                    :label="`${editUser.lableName}`"
+                    :placeholder="`请输入${editUser.lableName}`"
+            />
+        </van-cell-group>
+        <div style="margin: 16px;">
+            <van-button round block type="primary" native-type="submit">
+                提交
+            </van-button>
+        </div>
+    </van-form>
+</template>
 
 <style scoped>
 

@@ -1,91 +1,71 @@
-<template>
-    <div>
-    <van-search v-model="searchText" placeholder="搜索圈子" @search="searchCircle"/>
-    <template v-for="circle in circleList">
-        <van-card
-                :title="circle.name"
-                :desc="circle.description"
-                :thumb="circle.imageUrl"
-                :key="circle.name"
-                v-if="!circle.hasJoin && circle.status !== 1"
-        >
-            <template #tags>
-                <div style="margin-top: 5px;">
-                    <van-tag plain type="danger">{{ CircleStatusEnum[circle.status] }}</van-tag>
-                </div>
-            </template>
-            <template #footer>
-                <van-button type="primary" plain size="small" v-if="Number(circle.status) !== 1"
-                            @click="doJoinCircle(circle.id, circle.status)">加入圈子
-                </van-button>
-            </template>
-            <template #bottom>
-                圈子人数：{{circle.memberList.length}}/{{ circle.maxNum }} <br>
-                创建时间：{{ circle.createTime }} <br>
-                过期时间：{{ circle.expireTime }} <br>
-            </template>
-        </van-card>
-    </template>
-    <van-empty image="search" v-if="circleList.length < 1" description="结果为空"/>
-    </div>
-</template>
-
-<script setup>
-
-import { useRouter } from "vue-router";
+<script setup lang="ts">
+import CircleCardList from "../components/CircleCardList.vue";
+import request from "../config/request";
+import { Toast } from "vant";
 import { onMounted, ref } from "vue";
-import request from "../config/request.js";
-import { CircleStatusEnum } from "../constants/CircleStatusEnum.js";
-import { showConfirmDialog, showFailToast, showNotify, showSuccessToast } from "vant";
 
-const router = useRouter();
+const active = ref('public')
 const searchText = ref('');
-const circleList = ref([])
 
+/**
+ * 切换查询状态
+ * @param name
+ */
+const onTabChange = (name) => {
+  // 查公开
+  if (name === 'public') {
+    listCircle(searchText.value, 0);
+  } else {
+    // 查加密
+    listCircle(searchText.value, 2);
+  }
+}
 
-onMounted(() => {
-    searchCircle();
+const circleList = ref([]);
+
+/**
+ * 搜索队伍
+ * @param val
+ * @param status
+ * @returns {Promise<void>}
+ */
+const listCircle = async (val = '', status = 0) => {
+  const res = await request.get("/circle/list", {
+    params: {
+      searchText: val,
+      pageNum: 1,
+      status,
+    },
+  });
+  if (res?.code === 0) {
+    circleList.value = res.data;
+  } else {
+    Toast.fail('加载搭圈失败，请刷新重试');
+  }
+}
+
+// 页面加载时只触发一次
+onMounted( () => {
+  listCircle();
 })
-const searchCircle = async () => {
-    const res = await request.get(`/circle/list?searchText=${searchText.value}`);
-    if (res.code === 0) {
-        circleList.value = res.data
-    }
-}
 
-const doJoinCircle = (circleId, status) => {
-    // 公开房间
-    if (status === 0) {
-        showConfirmDialog({
-            title: '加入',
-            message:
-                '确定加入圈子吗？',
-            theme: 'round-button',
-        }).then(async () => {
-            const res = await request.post(`/circle/join/`, {circleId: circleId});
-            if (res.code === 0) {
-                showSuccessToast('加入成功');
-                location.reload();
-            } else {
-                showFailToast('加入失败');
-                showNotify({message: res.description, type: 'danger'});
-            }
-        }).catch(err => {
-        });
-    }
-    // 加密房间
-    if (status === 2) {
-        router.push({
-            path: "/circle/pwdInput",
-            query: {
-                circleId
-            }
-        })
-    }
-
-}
+const onSearch = (val) => {
+  listCircle(val);
+};
 
 </script>
+
+<template>
+    <div id="Circle">
+    <van-search v-model="searchText" placeholder="搜索搭圈" @search="onSearch" />
+    <van-tabs v-model:active="active" @change="onTabChange">
+      <van-tab title="公开" name="public" />
+      <van-tab title="加密" name="private" />
+    </van-tabs>
+    <circle-card-list :circleList="circleList" />
+    <van-empty v-if="circleList?.length < 1" description="没有搭圈"/>
+  </div>
+</template>
 
 <style scoped>
 :deep(.van-image__img) {

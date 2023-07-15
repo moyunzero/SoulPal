@@ -1,51 +1,15 @@
-<template>
-    <div>
-  <!--搜索-->
-    <form action="/">
-        <van-search
-                v-model="searchValue"
-                show-action
-                placeholder="请输入标签关键词"
-                @search="onSearch"
-                @cancel="onCancel"
-        />
-    </form>
-    <van-divider content-position="left" v-if="activeIds.length !== 0">我的标签</van-divider>
-    <van-divider content-position="left" v-if="activeIds.length === 0">请选择标签</van-divider>
-  <!--标签-->
-    <van-row gutter="16" style="padding: 0 16px">
-        <van-col v-for="activeId in activeIds" :key="activeId">
-            <van-tag closeable plain size="small"  type="primary" @close="close(activeId)">
-                {{ activeId }}
-            </van-tag>
-        </van-col>
-    </van-row>
+<script setup lang="ts">
+import request from "../config/request";
+import originTagList from "../data/originTagList";
+import { onMounted, ref } from "vue";
+import { showFailToast, showNotify, showSuccessToast } from "vant";
 
-  <!--分类选择-->
-    <van-tree-select
-            :active-id="activeIds"
-            :main-active-index="activeIndex"
-            :items="tagList"
-            style="height: 400px"
-    />
-    <van-button type="primary" round text="修改" size="large" style="position: fixed;bottom: 30px"
-                :disabled="activeIds.length < 1"
-                @click="updateTag(activeIds)"/>
-
-    </div>
-</template>
-
-<script setup >
-import {onMounted, ref} from "vue";
-import request from "../config/request.js";
-import originTagList from "../data/originTagList.js";
-import {showFailToast, showNotify, showSuccessToast} from "vant";
-
-const searchValue = ref('');
 const tagList = ref(originTagList)
+const searchValue = ref('');
 const activeIds = ref([])
 const activeIndex = ref(0)
 let currentUser = {}
+
 const onSearch = (searchValue) => {
     const tempTagList = originTagList.map(tag => {
         const tempTag = {...tag};
@@ -86,6 +50,40 @@ const updateTag = async (activeIds) => {
     }
 }
 </script>
+
+<template>
+  <!--搜索-->
+    <form action="/">
+        <van-search
+                v-model="searchValue"
+                show-action
+                placeholder="请输入标签关键词"
+                @search="onSearch"
+                @cancel="onCancel"
+        />
+    </form>
+    <van-divider content-position="left" v-if="activeIds.length !== 0">我的标签</van-divider>
+    <van-divider content-position="left" v-if="activeIds.length === 0">请选择标签</van-divider>
+  <!--标签-->
+    <van-row gutter="16" style="padding: 0 16px">
+        <van-col v-for="activeId in activeIds" :key="activeId">
+            <van-tag closeable plain size="small"  type="primary" @close="close(activeId)">
+                {{ activeId }}
+            </van-tag>
+        </van-col>
+    </van-row>
+
+  <!--分类选择-->
+    <van-tree-select
+            v-model:active-id="activeIds"
+            v-model:main-active-index="activeIndex"
+            :items="tagList"
+            style="height: 400px"
+    />
+    <van-button type="primary" round text="修改" size="large" style="position: fixed;bottom: 30px"
+                :disabled="activeIds.length < 1"
+                @click="updateTag(activeIds)"/>
+</template>
 
 <style scoped>
 

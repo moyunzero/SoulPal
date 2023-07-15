@@ -1,5 +1,4 @@
 <template>
-  <div >
     <van-nav-bar
             fixed
             placeholder
@@ -17,40 +16,41 @@
     </van-nav-bar>
 
     <div id="content">
-        <router-view/>
+        <router-view />
     </div>
     <van-tabbar route v-if="route.path==='/'||route.path==='/circle'||route.path==='/user'">
         <van-tabbar-item replace to="/" icon="home-o">主页</van-tabbar-item>
-        <van-tabbar-item replace to="/circle" icon="friends-o">SOUl</van-tabbar-item>
+        <van-tabbar-item replace to="/circle" icon="friends-o">搭圈</van-tabbar-item>
         <van-tabbar-item replace to="/user" icon="user-o">个人</van-tabbar-item>
     </van-tabbar>
-  </div>
 </template>
 
-<script setup >
+<script setup lang="ts">
 
-import {useRoute, useRouter} from "vue-router";
-import { ref } from 'vue';
+import { useRoute, useRouter } from "vue-router";
+import { ref } from "vue";
 
 const router = useRouter();
 const route = useRoute();
 const title = ref('主页')
 
+// @ts-ignore
 router.beforeEach((to, from, next) => {
-  title.value = to.meta.title
-  next()
+    // @ts-ignore
+    title.value = to.meta.title
+    next()
 })
 
 const onClickLeft = () => {
-  router.back();
+    router.back();
 }
 const onClickRight = () => {
-  if (route.path === '/') {
-      router.push('/search')
-  }
-  if (route.path === '/circle' || route.path === '/circle/myCreate' || route.path === '/circle/myJoin') {
-      router.push('/circle/create')
-  }
+    if (route.path === '/') {
+        router.push('/search')
+    }
+    if (route.path === '/circle' || route.path === '/circle/myCreate' || route.path === '/circle/myJoin') {
+        router.push('/circle/create')
+    }
 }
 
 
@@ -58,6 +58,6 @@ const onClickRight = () => {
 
 <style scoped>
 #content {
-  padding-bottom: 60px;
+    padding-bottom: 60px;
 }
 </style>

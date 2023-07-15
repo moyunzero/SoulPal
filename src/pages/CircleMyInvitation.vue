@@ -1,42 +1,13 @@
-<template>
-    <div>
-    <div v-for="circle in circleList" :key="circle.id">
-        <van-card
-                :title="circle.name"
-                :desc="circle.description"
-                :thumb="circle.imageUrl"
-        >
-            <template #tags>
-                <div style="margin-top: 5px;">
-                    <van-tag plain type="danger">{{ CircleStatusEnum[circle.status] }}</van-tag>
-                </div>
-            </template>
-            <template #footer>
-                <van-button type="primary" plain size="small" @click="doAgree(circle.id)">同意</van-button>
-                <van-button type="danger" plain size="small" @click="doIgnore(circle.id)">忽略</van-button>
-            </template>
-            <template #bottom>
-                圈子人数：{{ circle.memberList.length }}/{{ circle.maxNum }} <br>
-                创建时间：{{ circle.createTime }} <br>
-                过期时间：{{ circle.expireTime }} <br>
-            </template>
-        </van-card>
-    </div>
-    <van-empty image="search" v-if="circleList === null || circleList.length < 1" description="结果为空"/>
-    </div>
-</template>
+<script setup lang="ts">
+import request from "../config/request";
+import { useRouter } from "vue-router";
+import { onMounted, Ref, ref } from "vue";
+import { CircleStatusEnum } from "../constants/CircleStatusEnum";
+import { showFailToast, showNotify, showSuccessToast } from "vant";
+import { CircleType }  from "../models/circle";
 
-<script setup >
-
-import {useRouter} from "vue-router";
-import {onMounted,  ref} from "vue";
-import request from "../config/request.js";
-import {CircleStatusEnum} from "../constants/CircleStatusEnum.js";
-import {showFailToast, showNotify, showSuccessToast} from "vant";
-
-const router = useRouter();
-const circleList = ref([])
-
+// const router = useRouter();
+const circleList: Ref<CircleType[]> = ref([])
 
 onMounted(() => {
     loadCircle();
@@ -79,6 +50,32 @@ const doIgnore = async (circleId) => {
 }
 
 </script>
+
+<template>
+    <template v-for="circle in circleList">
+        <van-card
+                :title="circle.name"
+                :desc="circle.description"
+                :thumb="circle.imageUrl"
+        >
+            <template #tags>
+                <div style="margin-top: 5px;">
+                    <van-tag plain type="danger">{{ CircleStatusEnum[circle.status] }}</van-tag>
+                </div>
+            </template>
+            <template #footer>
+                <van-button type="primary" plain size="small" @click="doAgree(circle.id)">同意</van-button>
+                <van-button type="danger" plain size="small" @click="doIgnore(circle.id)">忽略</van-button>
+            </template>
+            <template #bottom>
+                搭圈人数：{{ circle.memberList.length }}/{{ circle.maxNum }} <br>
+                创建时间：{{ circle.createTime }} <br>
+                过期时间：{{ circle.expireTime }} <br>
+            </template>
+        </van-card>
+    </template>
+    <van-empty image="search" v-if="circleList === null || circleList.length < 1" description="结果为空"/>
+</template>
 
 <style scoped>
 :deep(.van-image__img) {
