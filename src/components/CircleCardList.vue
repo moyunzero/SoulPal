@@ -20,7 +20,7 @@
             </van-button>
         </template>
         <template #bottom>
-            搭圈人数：{{circle.memberList.length}}/{{ circle.maxNum }} <br>
+            搭圈人数：{{ circle.memberList.length }}/{{ circle.maxNum }} <br>
             创建时间：{{ circle.createTime }} <br>
             过期时间：{{ circle.expireTime }} <br>
         </template>
